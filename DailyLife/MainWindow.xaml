@@ -12,16 +12,32 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Background="Gray">
+        <StackPanel Orientation="Horizontal" ButtonBase.Click="StackPanel_Click" Background="Gray">
             <Button Content="选择"/>
             <Button Content="工具"/>
-            <Button Content="背景"/>
+            <Button Content="背景" x:Name="btnBackImages" Tag="BackImages"/>
             <Button Content="贴纸"/>
             <Button Content="文本"/>
             <Button Content="心情"/>
             <Button Content="图片"/>
-            <Button Content="画笔"/>
+            <Button Content="画笔" Tag="LineShape"/>
         </StackPanel>
+        <Popup StaysOpen="False"  x:Name="popBackImages" PlacementTarget="{Binding ElementName=btnBackImages}">
+            <StackPanel ButtonBase.Click="StackPanel_Click_1">
+                <StackPanel Orientation="Horizontal" Width="100" Height="50">
+                    <Button Width="50" BorderBrush="Black">
+                        <Button.Background>
+                            <ImageBrush ImageSource="{Binding Source={RelativeSource Mode=TemplatedParent}, Converter={StaticResource b2c},ConverterParameter=1.jpg}"/>
+                        </Button.Background>
+                    </Button>
+                    <Button Width="50" BorderBrush="Black">
+                        <Button.Background>
+                            <ImageBrush ImageSource="{Binding Source={RelativeSource Mode=TemplatedParent}, Converter={StaticResource b2c},ConverterParameter=2.jpg}"/>
+                        </Button.Background>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Popup>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

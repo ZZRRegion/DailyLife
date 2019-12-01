@@ -24,5 +24,30 @@ namespace DailyLife
         {
             InitializeComponent();
         }
+
+        private void StackPanel_Click(object sender, RoutedEventArgs e)
+        {
+            if(e.Source is Button btn && btn.Tag is string tag)
+            {
+                switch (tag)
+                {
+                    case "LineShape":
+                        this.canvas.SetActiveTool("GeneralTool", Tools.ToolType.LineShape);
+                        break;
+                    case "BackImages":
+                        this.popBackImages.IsOpen = true;
+                        break;
+                }
+            }
+        }
+
+        private void StackPanel_Click_1(object sender, RoutedEventArgs e)
+        {
+            this.popBackImages.IsOpen = false;
+            if(e.Source is Button btn && btn.Background != null)
+            {
+                this.canvas.Background = btn.Background;
+            }
+        }
     }
 }

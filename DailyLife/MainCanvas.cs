@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -29,9 +29,10 @@ namespace DailyLife
     public class MainCanvas:Canvas
     {
         public List<AreaShape> Shapes { get; set; } = new List<AreaShape>();
+        public List<AreaShape> SelectedShapes { get; set; } = new List<AreaShape>();
         public Dictionary<string, ToolBase> Tools { get; set; } = new Dictionary<string, ToolBase>();
         public ToolBase ActiveTool { get; private set; }
-        public void SetActiveTool(string name)
+        public void SetActiveTool(string name, ToolType toolType)
         {
             if(this.ActiveTool.ToolName != name)
             {
@@ -53,6 +54,7 @@ namespace DailyLife
                 case ToolOperation.Move:
                     break;
                 case ToolOperation.End:
+                    this.SelectedShapes.Add(this.ActiveTool.Data);
                     break;
                 case ToolOperation.Delete:
                     break;
@@ -61,13 +63,46 @@ namespace DailyLife
 
         public MainCanvas()
         {
-            this.Background = Brushes.Transparent;
+            this.Background = Brushes.White;
+            GeneralTool generalTool = new GeneralTool();
+            this.Tools.Add(generalTool.ToolName, generalTool);
+            PointTool pointTool = new PointTool();
+            this.Tools.Add(pointTool.ToolName, pointTool);
+            ImageTool imageTool = new ImageTool();
+            this.Tools.Add(imageTool.ToolName, imageTool);
+            this.ActiveTool = pointTool;
         }
         protected override void OnRender(DrawingContext dc)
         {
+            base.OnRender(dc);
             foreach(AreaShape shape in this.Shapes)
             {
                 shape.Render(dc);
+            }
+            foreach(AreaShape areaShape in this.SelectedShapes)
+            {
+                this.DrawSelectedShap(areaShape, dc);
+            }
+        }
+        protected void DrawSelectedShap(AreaShape areaShape, DrawingContext dc)
+        {
+            Rect rect = new Rect(areaShape.Location, areaShape.Size);
+            Pen pen = new Pen(Brushes.Red, 1);
+            dc.DrawRectangle(null, pen, rect);
+            Point[] pts = new Point[]
+            {
+                rect.TopLeft,
+                rect.TopLeft + new Vector(rect.Width / 2, 0),
+                rect.TopRight,
+                rect.TopLeft + new Vector(0, rect.Height / 2),
+                rect.TopRight + new Vector(0, rect.Height /2),
+                rect.BottomLeft,
+                rect.BottomLeft + new Vector(rect.Width / 2, 0),
+                rect.BottomRight
+            };
+            foreach(Point pt in pts)
+            {
+                dc.DrawEllipse(Brushes.Red, pen, pt, 5, 5);
             }
         }
         #region 变量

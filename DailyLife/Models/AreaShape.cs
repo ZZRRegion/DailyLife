@@ -26,6 +26,18 @@ namespace DailyLife.Models
 {
     public abstract class AreaShape
     {
+        /// <summary>
+        /// 是否选中
+        /// </summary>
+        public bool IsSelected { get; set; }
+        /// <summary>
+        /// 文字内容
+        /// </summary>
+        public string Text { get; set; }
+        /// <summary>
+        /// 用户正在用鼠标绘制过程中
+        /// </summary>
+        public bool IsDrawing { get; set; } = true;
         public Geometry Geometry { get; set; }
         /// <summary>
         /// 左上角位置
@@ -55,11 +67,11 @@ namespace DailyLife.Models
         /// <summary>
         /// 线条颜色
         /// </summary>
-        public Brush LineBrush { get; set; }
+        public Brush LineBrush { get; set; } = Brushes.Blue;
         /// <summary>
         /// 线宽度
         /// </summary>
-        public double ThicknessWidth { get; set; }
+        public double ThicknessWidth { get; set; } = 1;
         /// <summary>
         /// 更新
         /// </summary>

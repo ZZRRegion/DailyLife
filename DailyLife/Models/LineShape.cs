@@ -26,9 +26,15 @@ namespace DailyLife.Models
 {
     public class LineShape:AreaShape
     {
+        public Point[] Points { get; set; }
         public override void UpdateGeometry()
         {
             Rect rect = new Rect(this.Location, this.Size);
+            this.Points = new Point[]
+            {
+                rect.TopLeft,
+                rect.BottomRight,
+            };
             this.Geometry = new LineGeometry(rect.TopLeft, rect.BottomRight);
             this.CenterPoint = rect.TopRight + new Vector(rect.Width / 2, rect.Height / 2);
         }
@@ -36,6 +42,13 @@ namespace DailyLife.Models
         {
             Pen pen = new Pen(this.LineBrush, this.ThicknessWidth);
             dc.DrawGeometry(this.FillBrush, pen, this.Geometry);
+            if (this.IsDrawing)
+            {
+                foreach(Point pt in this.Points)
+                {
+                    dc.DrawEllipse(Brushes.Red, null, pt, 5, 5);
+                }
+            }
         }
     }
 }

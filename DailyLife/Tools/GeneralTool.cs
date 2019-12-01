@@ -35,7 +35,7 @@ namespace DailyLife.Tools
         {
         }
 
-        public override string ToolName { get; } = "General";
+        public override string ToolName { get; } = "GeneralTool";
 
         public override void Start(MainCanvas mainCanvas)
         {
@@ -49,6 +49,8 @@ namespace DailyLife.Tools
         {
             this.StartPoint = new Point();
             base.OnToolElement(ToolOperation.End);
+            this.Data.IsDrawing = false;
+            this.Main.InvalidateVisual();
         }
 
         private void Main_MouseMove(object sender, MouseEventArgs e)
@@ -57,9 +59,12 @@ namespace DailyLife.Tools
             {
                 Point pt = e.GetPosition(this.Main);
                 Vector vector = pt - this.StartPoint;
-                this.Data.Size = new Size(vector.X, vector.Y);
-                base.OnToolElement(ToolOperation.Move);
-                this.Main.InvalidateVisual();
+                if (vector.X > 0 && vector.Y > 0)
+                {
+                    this.Data.Size = new Size(vector.X, vector.Y);
+                    base.OnToolElement(ToolOperation.Move);
+                    this.Main.InvalidateVisual();
+                }
             }
         }
 
