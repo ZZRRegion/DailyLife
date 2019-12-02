@@ -21,34 +21,36 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Xml.Linq;
 
 namespace DailyLife.Models
 {
     public class LineShape:AreaShape
     {
-        public Point[] Points { get; set; }
         public override void UpdateGeometry()
         {
-            Rect rect = new Rect(this.Location, this.Size);
-            this.Points = new Point[]
-            {
-                rect.TopLeft,
-                rect.BottomRight,
-            };
-            this.Geometry = new LineGeometry(rect.TopLeft, rect.BottomRight);
+            this.Geometry = new LineGeometry(this.Location, this.EndLocation);
+            Rect rect = this.Geometry.Bounds;
             this.CenterPoint = rect.TopRight + new Vector(rect.Width / 2, rect.Height / 2);
         }
-        public override void Render(DrawingContext dc)
+        public override void Render(DrawingContext dc, Matrix matrix)
         {
-            Pen pen = new Pen(this.LineBrush, this.ThicknessWidth);
-            dc.DrawGeometry(this.FillBrush, pen, this.Geometry);
-            if (this.IsDrawing)
-            {
-                foreach(Point pt in this.Points)
-                {
-                    dc.DrawEllipse(Brushes.Red, null, pt, 5, 5);
-                }
-            }
+            Matrix _matrix = this.ScaleMatrix * matrix;
+            Pen pen = new Pen(this.LineBrush, this.ThicknessWidth * matrix.M11);
+            Geometry geo = this.Geometry.Clone();
+            geo.Transform = new MatrixTransform(_matrix);
+            dc.DrawGeometry(this.FillBrush, pen, geo);
+            base.Render(dc, matrix);
+        }
+
+        public override XElement Save()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override AreaShape FromSvg(XElement item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

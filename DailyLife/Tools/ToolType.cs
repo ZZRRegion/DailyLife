@@ -29,6 +29,7 @@ namespace DailyLife.Tools
     {
         None,
         LineShape,
+        RectShape,
         #region 变量
         #endregion
         #region 方法

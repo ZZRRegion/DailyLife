@@ -21,11 +21,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace DailyLife.Models
 {
     public abstract class AreaShape
     {
+        public Matrix ScaleMatrix { get; set; }
         /// <summary>
         /// 是否选中
         /// </summary>
@@ -39,6 +42,7 @@ namespace DailyLife.Models
         /// </summary>
         public bool IsDrawing { get; set; } = true;
         public Geometry Geometry { get; set; }
+        public Point EndLocation { get; set; }
         /// <summary>
         /// 左上角位置
         /// </summary>
@@ -63,7 +67,7 @@ namespace DailyLife.Models
         /// <summary>
         /// 填充颜色
         /// </summary>
-        public Brush FillBrush { get; set; }
+        public Brush FillBrush { get; set; } = Brushes.Transparent;
         /// <summary>
         /// 线条颜色
         /// </summary>
@@ -80,9 +84,21 @@ namespace DailyLife.Models
         /// 绘制
         /// </summary>
         /// <param name="dc"></param>
-        public virtual void Render(DrawingContext dc)
+        public virtual void Render(DrawingContext dc, Matrix matrix)
         {
-
+            if (this.IsDrawing)
+            {
+                EllipseGeometry ellipseGeometry = new EllipseGeometry(this.Location, 5, 5);
+                ellipseGeometry.Transform = new MatrixTransform(this.ScaleMatrix * matrix);
+                dc.DrawGeometry(Brushes.Red, null, ellipseGeometry);
+                ellipseGeometry = new EllipseGeometry(this.EndLocation, 5, 5);
+                ellipseGeometry.Transform = new MatrixTransform(this.ScaleMatrix * matrix);
+                dc.DrawGeometry(Brushes.Orange, null, ellipseGeometry);
+            }
         }
+        public abstract XElement Save();
+        public abstract AreaShape FromSvg(XElement item);
+
+        
     }
 }

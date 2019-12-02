@@ -21,6 +21,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+
 namespace DailyLife.Tools
 {
     public abstract class ToolBase
@@ -40,6 +42,19 @@ namespace DailyLife.Tools
         /// 当前工具类型
         /// </summary>
         public ToolType ToolType { get; set; }
+        /// <summary>
+        /// 窗口页面矩阵
+        /// </summary>
+        public Matrix WinMatrix { get; set; }
+        public Matrix PointMatrix
+        {
+            get
+            {
+                Matrix matrix = this.WinMatrix;
+                matrix.Invert();
+                return matrix;
+            }
+        }
         /// <summary>
         /// 工具名称
         /// </summary>

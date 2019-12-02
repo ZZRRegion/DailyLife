@@ -58,6 +58,7 @@
     <Compile Include="Converter\BackImageConverter.cs" />
     <Compile Include="MainCanvas.cs" />
     <Compile Include="Models\ImageShape.cs" />
+    <Compile Include="Models\RectShape.cs" />
     <Compile Include="Models\TextShape.cs" />
     <Compile Include="Tools\GeneralTool.cs" />
     <Compile Include="Tools\ImageTool.cs" />

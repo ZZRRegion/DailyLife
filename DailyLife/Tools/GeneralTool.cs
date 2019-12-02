@@ -23,6 +23,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using DailyLife.Models;
 using System.Windows;
+using System.Windows.Media;
 
 namespace DailyLife.Tools
 {
@@ -47,24 +48,60 @@ namespace DailyLife.Tools
 
         private void Main_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            this.StartPoint = new Point();
-            base.OnToolElement(ToolOperation.End);
+            Point pt = this.PointMatrix.Transform(e.GetPosition(this.Main));
+            Vector vector = pt - this.StartPoint;
             this.Data.IsDrawing = false;
-            this.Main.InvalidateVisual();
+            if (vector.Length < 1)
+            {
+                base.OnToolElement(ToolOperation.Delete);
+            }
+            else
+            {
+                base.OnToolElement(ToolOperation.End);
+            }
         }
 
         private void Main_MouseMove(object sender, MouseEventArgs e)
         {
             if(e.LeftButton == MouseButtonState.Pressed)
             {
-                Point pt = e.GetPosition(this.Main);
-                Vector vector = pt - this.StartPoint;
-                if (vector.X > 0 && vector.Y > 0)
+                Point _mousePos = this.PointMatrix.Transform(e.GetPosition(this.Main));
+                this.Data.EndLocation = _mousePos;
+                if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
                 {
-                    this.Data.Size = new Size(vector.X, vector.Y);
-                    base.OnToolElement(ToolOperation.Move);
-                    this.Main.InvalidateVisual();
+                    double _dis = Math.Max(Math.Abs(_mousePos.X - this.StartPoint.X), Math.Abs(_mousePos.Y - this.StartPoint.Y));
+                    if (_mousePos.X < this.StartPoint.X || _mousePos.Y < this.StartPoint.Y)
+                    {
+                        switch (this.ToolType)
+                        {
+                            case ToolType.LineShape:
+                                this.Data.EndLocation = this.StartPoint;
+                                this.Data.Location = new Point(this.StartPoint.X - (_mousePos.X < this.StartPoint.X ? _dis : 0), this.StartPoint.Y - (_mousePos.Y < this.StartPoint.Y ? _dis : 0));
+                                break;
+                            case ToolType.RectShape:
+                                break;
+                        }
+                        
+                    }
+                    this.Data.Size = new Size(_dis, _dis);
                 }
+                else
+                {
+                    if (_mousePos.X < this.StartPoint.X || _mousePos.Y < this.StartPoint.Y)
+                    {
+                        switch (this.ToolType)
+                        {
+                            case ToolType.LineShape:
+                                break;
+                            case ToolType.RectShape:
+                                this.Data.EndLocation = this.StartPoint;
+                                this.Data.Location = new Point(Math.Min(_mousePos.X, this.StartPoint.X), Math.Min(_mousePos.Y, this.StartPoint.Y));
+                                break;
+                        }
+                    }
+                    this.Data.Size = new Size(Math.Abs(_mousePos.X - this.StartPoint.X), Math.Abs(_mousePos.Y - this.StartPoint.Y));
+                }
+                this.OnToolElement(ToolOperation.Move);
             }
         }
 
@@ -72,15 +109,32 @@ namespace DailyLife.Tools
         {
             if(e.LeftButton == MouseButtonState.Pressed)
             {
-                this.Data = new LineShape();
-                this.StartPoint = e.GetPosition(this.Main);
-                this.Data.Location = this.StartPoint;
+                switch (this.ToolType)
+                {
+                    case ToolType.LineShape:
+                        this.Data = new LineShape();
+                        break;
+                    case ToolType.RectShape:
+                        this.Data = new RectShape();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                Point pt = this.PointMatrix.Transform(e.GetPosition(this.Main));
+                this.StartPoint = pt;
+                this.Data.Location = pt;
+                this.Data.EndLocation = pt;
+                this.Data.Size = new Size();
                 base.OnToolElement(ToolOperation.Start);
             }
         }
 
         public override void Stop()
         {
+            this.Main.MouseDown -= Main_MouseDown;
+            this.Main.MouseMove -= Main_MouseMove;
+            this.Main.MouseUp -= Main_MouseUp;
+            this.Main = null;
         }
         #region 变量
         #endregion

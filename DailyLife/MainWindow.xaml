@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DailyLife"
         mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        SizeChanged="Window_SizeChanged"
         WindowStartupLocation="CenterScreen"
-        Title="小日常" Height="450" Width="800">
+        Title="小日常" Height="699" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -20,7 +22,8 @@
             <Button Content="文本"/>
             <Button Content="心情"/>
             <Button Content="图片"/>
-            <Button Content="画笔" Tag="LineShape"/>
+            <Button Content="直线" Tag="LineShape"/>
+            <Button Content="矩形" Tag="RectShape"/>
         </StackPanel>
         <Popup StaysOpen="False"  x:Name="popBackImages" PlacementTarget="{Binding ElementName=btnBackImages}">
             <StackPanel ButtonBase.Click="StackPanel_Click_1">
@@ -38,7 +41,7 @@
                 </StackPanel>
             </StackPanel>
         </Popup>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Background="Gray">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
@@ -47,7 +50,7 @@
             <StackPanel Background="Gray" Grid.Column="0">
                 <Button Content="查看"/>
             </StackPanel>
-            <local:MainCanvas Grid.Column="1" x:Name="canvas">
+            <local:MainCanvas Width="550" Height="309.375" Grid.Column="1" x:Name="canvas">
             </local:MainCanvas>
             <Grid Grid.Column="2" Width="100">
                 <Button Content="属性"/>

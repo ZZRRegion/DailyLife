@@ -23,22 +23,26 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Reflection;
 
 namespace DailyLife
 {
     public class MainCanvas:Canvas
     {
+        public Matrix Matrix { get; set; }
         public List<AreaShape> Shapes { get; set; } = new List<AreaShape>();
         public List<AreaShape> SelectedShapes { get; set; } = new List<AreaShape>();
         public Dictionary<string, ToolBase> Tools { get; set; } = new Dictionary<string, ToolBase>();
         public ToolBase ActiveTool { get; private set; }
         public void SetActiveTool(string name, ToolType toolType)
         {
-            if(this.ActiveTool.ToolName != name)
+            if(this.ActiveTool.ToolName != name || this.ActiveTool.ToolType != toolType)
             {
                 this.ActiveTool.ToolElementEvent -= this.ActiveTool_ToolElementEvent;
                 this.ActiveTool.Stop();
                 this.ActiveTool = this.Tools[name];
+                this.ActiveTool.ToolType = toolType;
+                this.ActiveTool.WinMatrix = this.Matrix;
                 this.ActiveTool.ToolElementEvent += ActiveTool_ToolElementEvent;
                 this.ActiveTool.Start(this);
             }
@@ -54,30 +58,37 @@ namespace DailyLife
                 case ToolOperation.Move:
                     break;
                 case ToolOperation.End:
-                    this.SelectedShapes.Add(this.ActiveTool.Data);
                     break;
                 case ToolOperation.Delete:
+                    this.Shapes.Remove(this.ActiveTool.Data);
                     break;
             }
+            this.InvalidateVisual();
         }
 
         public MainCanvas()
         {
             this.Background = Brushes.White;
-            GeneralTool generalTool = new GeneralTool();
-            this.Tools.Add(generalTool.ToolName, generalTool);
-            PointTool pointTool = new PointTool();
-            this.Tools.Add(pointTool.ToolName, pointTool);
-            ImageTool imageTool = new ImageTool();
-            this.Tools.Add(imageTool.ToolName, imageTool);
-            this.ActiveTool = pointTool;
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            foreach(Type type in assembly.GetTypes())
+            {
+                if(type.BaseType == typeof(ToolBase))
+                {
+                    ToolBase toolBase = Activator.CreateInstance(type) as ToolBase;
+                    this.Tools.Add(toolBase.ToolName, toolBase);
+                    if(toolBase is PointTool)
+                    {
+                        this.ActiveTool = toolBase;
+                    }
+                }
+            }
         }
         protected override void OnRender(DrawingContext dc)
         {
             base.OnRender(dc);
             foreach(AreaShape shape in this.Shapes)
             {
-                shape.Render(dc);
+                shape.Render(dc, this.Matrix);
             }
             foreach(AreaShape areaShape in this.SelectedShapes)
             {
