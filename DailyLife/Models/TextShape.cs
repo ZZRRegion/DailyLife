@@ -17,6 +17,11 @@ namespace DailyLife.Models
             throw new NotImplementedException();
         }
 
+        public override int Hit(Point pt, Matrix matrix)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Render(DrawingContext dc, Matrix matrix)
         {
             FormattedText formattedText = new FormattedText(
@@ -32,7 +37,6 @@ namespace DailyLife.Models
 
         public override void UpdateGeometry()
         {
-            base.UpdateGeometry();
         }
     }
 }

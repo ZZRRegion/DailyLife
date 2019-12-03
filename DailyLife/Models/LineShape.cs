@@ -52,5 +52,14 @@ namespace DailyLife.Models
         {
             throw new NotImplementedException();
         }
+
+        public override int Hit(Point pt, Matrix matrix)
+        {
+            if (this.Geometry.Bounds.Contains(pt))
+            {
+                return 1;
+            }
+            return 0;
+        }
     }
 }

@@ -79,7 +79,12 @@ namespace DailyLife.Models
         /// <summary>
         /// 更新
         /// </summary>
-        public virtual void UpdateGeometry() { }
+        public abstract void UpdateGeometry();
+        public virtual void TransForm(Matrix matrix)
+        {
+            this.ScaleMatrix *= matrix;
+        }
+        public abstract int Hit(Point pt, Matrix matrix);
         /// <summary>
         /// 绘制
         /// </summary>

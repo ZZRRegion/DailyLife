@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -45,6 +46,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="ThoughtWorks.QRCode">
+      <HintPath>..\Libs\ThoughtWorks.QRCode.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -65,6 +69,12 @@
     <Compile Include="Tools\PointTool.cs" />
     <Compile Include="Tools\ToolBase.cs" />
     <Compile Include="Tools\ToolType.cs" />
+    <Compile Include="Utils\BitmapCursor.cs" />
+    <Compile Include="Utils\ControlsTool.cs" />
+    <Compile Include="Utils\DoubleUtil.cs" />
+    <Compile Include="Utils\FileUtil.cs" />
+    <Compile Include="Utils\ImageUtil.cs" />
+    <Compile Include="Utils\PointUtil.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -119,6 +129,17 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="BackImages\1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

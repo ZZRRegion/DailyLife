@@ -15,7 +15,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" ButtonBase.Click="StackPanel_Click" Background="Gray">
-            <Button Content="选择"/>
+            <Button Content="选择" Tag="PointTool"/>
             <Button Content="工具"/>
             <Button Content="背景" x:Name="btnBackImages" Tag="BackImages"/>
             <Button Content="贴纸"/>
@@ -53,7 +53,10 @@
             <local:MainCanvas Width="550" Height="309.375" Grid.Column="1" x:Name="canvas">
             </local:MainCanvas>
             <Grid Grid.Column="2" Width="100">
-                <Button Content="属性"/>
+                <StackPanel>
+                    <Button Content="属性"/>
+                    <Button x:Name="btnTest" Height="100"/>
+                </StackPanel>
             </Grid>
         </Grid>
     </Grid>

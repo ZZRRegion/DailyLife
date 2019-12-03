@@ -29,6 +29,9 @@ namespace DailyLife
 {
     public class MainCanvas:Canvas
     {
+        /// <summary>
+        /// 当前窗口缩放
+        /// </summary>
         public Matrix Matrix { get; set; }
         public List<AreaShape> Shapes { get; set; } = new List<AreaShape>();
         public List<AreaShape> SelectedShapes { get; set; } = new List<AreaShape>();
@@ -47,6 +50,18 @@ namespace DailyLife
                 this.ActiveTool.Start(this);
             }
         }
+        public List<AreaShape> Hit(Point pt, Matrix matrix)
+        {
+            List<AreaShape> lst = new List<AreaShape>();
+            foreach(AreaShape areaShape in this.Shapes)
+            {
+                if(areaShape.Hit(pt, matrix) > 0)
+                {
+                    lst.Add(areaShape);
+                }
+            }
+            return lst;
+        }
 
         private void ActiveTool_ToolElementEvent(ToolOperation toolOperation)
         {
@@ -61,6 +76,18 @@ namespace DailyLife
                     break;
                 case ToolOperation.Delete:
                     this.Shapes.Remove(this.ActiveTool.Data);
+                    break;
+                case ToolOperation.Selected:
+                    foreach(AreaShape item in this.ActiveTool.Datas)
+                    {
+                        if (!this.SelectedShapes.Contains(item))
+                        {
+                            this.SelectedShapes.Add(item);
+                        }
+                    }
+                    break;
+                case ToolOperation.Clear:
+                    this.SelectedShapes.Clear();
                     break;
             }
             this.InvalidateVisual();
@@ -79,6 +106,10 @@ namespace DailyLife
                     if(toolBase is PointTool)
                     {
                         this.ActiveTool = toolBase;
+                        this.ActiveTool.ToolType = ToolType.PointTool;
+                        this.ActiveTool.WinMatrix = this.Matrix;
+                        this.ActiveTool.ToolElementEvent += ActiveTool_ToolElementEvent;
+                        this.ActiveTool.Start(this);
                     }
                 }
             }
@@ -97,7 +128,9 @@ namespace DailyLife
         }
         protected void DrawSelectedShap(AreaShape areaShape, DrawingContext dc)
         {
+            Matrix tmatrix = areaShape.ScaleMatrix * this.Matrix;
             Rect rect = new Rect(areaShape.Location, areaShape.Size);
+            rect.Transform(tmatrix);
             Pen pen = new Pen(Brushes.Red, 1);
             dc.DrawRectangle(null, pen, rect);
             Point[] pts = new Point[]

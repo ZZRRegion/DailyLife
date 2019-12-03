@@ -16,6 +16,11 @@ namespace DailyLife.Models
             throw new NotImplementedException();
         }
 
+        public override int Hit(Point pt, Matrix matrix)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Render(DrawingContext dc, Matrix matrix)
         {
         }

@@ -35,6 +35,10 @@ namespace DailyLife.Tools
         public Point StartPoint { get; set; }
         public AreaShape Data { get; set; }
         /// <summary>
+        /// 多个图形
+        /// </summary>
+        public List<AreaShape> Datas { get; set; }
+        /// <summary>
         /// 父容器
         /// </summary>
         public MainCanvas Main { get; protected set; }

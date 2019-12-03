@@ -30,6 +30,7 @@ namespace DailyLife.Tools
         None,
         LineShape,
         RectShape,
+        PointTool,
         #region 变量
         #endregion
         #region 方法
@@ -47,5 +48,13 @@ namespace DailyLife.Tools
         Move,
         End,
         Delete,
+        /// <summary>
+        /// 选择
+        /// </summary>
+        Selected,
+        /// <summary>
+        /// 清空选择
+        /// </summary>
+        Clear,
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DailyLife.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +41,9 @@ namespace DailyLife
                     case "BackImages":
                         this.popBackImages.IsOpen = true;
                         break;
+                    case "PointTool":
+                        this.canvas.SetActiveTool("PointTool", Tools.ToolType.PointTool);
+                        break;
                 }
             }
         }
@@ -55,7 +59,7 @@ namespace DailyLife
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            this.btnTest.Background = new ImageBrush(ImageUtil.Str2QRCodeImg(DateTime.Now.ToString()));
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)

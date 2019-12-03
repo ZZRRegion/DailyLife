@@ -48,22 +48,26 @@ namespace DailyLife.Tools
 
         private void Main_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Point pt = this.PointMatrix.Transform(e.GetPosition(this.Main));
-            Vector vector = pt - this.StartPoint;
-            this.Data.IsDrawing = false;
-            if (vector.Length < 1)
+            if (this.Data != null)
             {
-                base.OnToolElement(ToolOperation.Delete);
-            }
-            else
-            {
-                base.OnToolElement(ToolOperation.End);
+                Point pt = this.PointMatrix.Transform(e.GetPosition(this.Main));
+                Vector vector = pt - this.StartPoint;
+                this.Data.IsDrawing = false;
+                if (vector.Length < 1)
+                {
+                    base.OnToolElement(ToolOperation.Delete);
+                }
+                else
+                {
+                    base.OnToolElement(ToolOperation.End);
+                }
+                this.Data = null;
             }
         }
 
         private void Main_MouseMove(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed)
+            if(e.LeftButton == MouseButtonState.Pressed && this.Data != null)
             {
                 Point _mousePos = this.PointMatrix.Transform(e.GetPosition(this.Main));
                 this.Data.EndLocation = _mousePos;
@@ -134,7 +138,6 @@ namespace DailyLife.Tools
             this.Main.MouseDown -= Main_MouseDown;
             this.Main.MouseMove -= Main_MouseMove;
             this.Main.MouseUp -= Main_MouseUp;
-            this.Main = null;
         }
         #region 变量
         #endregion
